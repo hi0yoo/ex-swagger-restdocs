@@ -37,7 +37,8 @@ openapi3 {
     title = "restdocs-swagger Test API Documentation"
     description = "Spring REST Docs with SwaggerUI"
     version = "0.0.1-SNAPSHOT"
-    format = "yaml"
+//    format = "yaml"
+    format = "json"
     outputDirectory = "."
     outputFileNamePrefix = "swagger"
     // tagDescriptionsPropertiesFile은 설정하지 않아도 무관
