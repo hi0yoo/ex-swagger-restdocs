@@ -2,6 +2,7 @@ package com.example.exswaggerrestdocs.controller;
 
 import com.example.exswaggerrestdocs.common.ApiResponse;
 import com.example.exswaggerrestdocs.common.MessageResponse;
+import com.example.exswaggerrestdocs.common.ValidationException;
 import com.example.exswaggerrestdocs.controller.request.UserAddRequest;
 import com.example.exswaggerrestdocs.controller.request.UserModifyRequest;
 import com.example.exswaggerrestdocs.controller.response.UserAddResponse;
@@ -11,6 +12,8 @@ import com.example.exswaggerrestdocs.entity.User;
 import com.example.exswaggerrestdocs.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +28,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ApiResponse<UserAddResponse> userAdd(@RequestBody UserAddRequest request) {
+    public ApiResponse<UserAddResponse> userAdd(@Validated @RequestBody UserAddRequest request,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException(bindingResult);
+        }
+
         Long userId = userService.saveUser(
                 new User(
                         request.getName(),

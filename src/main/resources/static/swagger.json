@@ -1,0 +1,164 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "restdocs-swagger Test API Documentation",
+    "description" : "Spring REST Docs with SwaggerUI",
+    "version" : "0.0.1-SNAPSHOT"
+  },
+  "servers" : [ {
+    "url" : "http://localhost:8081"
+  } ],
+  "tags" : [ ],
+  "paths" : {
+    "/api/v1/users" : {
+      "post" : {
+        "tags" : [ "api" ],
+        "summary" : "유저 생성",
+        "description" : "유저 생성",
+        "operationId" : "user-add/",
+        "requestBody" : {
+          "content" : {
+            "application/json;charset=UTF-8" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/api-v1-users1167354824"
+              },
+              "examples" : {
+                "user-add/success" : {
+                  "value" : "{\n  \"name\" : \"user1\",\n  \"age\" : 25,\n  \"gender\" : \"MEN\"\n}"
+                },
+                "user-add/valid-fail" : {
+                  "value" : "{\n  \"name\" : null,\n  \"age\" : 10,\n  \"gender\" : null\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "200",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-users922416521"
+                },
+                "examples" : {
+                  "user-add/success" : {
+                    "value" : "{\n  \"responseTime\" : \"2023-01-08T15:47:29.602575\",\n  \"errorMessage\" : null,\n  \"data\" : {\n    \"userId\" : 1\n  }\n}"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "400",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/api-v1-users-280585495"
+                },
+                "examples" : {
+                  "user-add/valid-fail" : {
+                    "value" : "{\n  \"responseTime\" : \"2023-01-08T15:47:30.794132\",\n  \"errorMessage\" : \"요청 데이터 검증 오류 발생\",\n  \"data\" : {\n    \"name\" : [ \"must not be blank\" ],\n    \"age\" : [ \"must be between 19 and 30\" ]\n  }\n}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "api-v1-users922416521" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "userId" : {
+                "type" : "number",
+                "description" : "생성된 유저 식별값"
+              }
+            },
+            "description" : "응답 데이터"
+          },
+          "responseTime" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "errorMessage" : {
+            "type" : "string",
+            "description" : "오류 메시지"
+          }
+        }
+      },
+      "api-v1-users1167354824" : {
+        "type" : "object",
+        "properties" : {
+          "gender" : {
+            "type" : "string",
+            "description" : "성별"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "이름"
+          },
+          "age" : {
+            "type" : "number",
+            "description" : "나이"
+          }
+        }
+      },
+      "api-v1-users-280585495" : {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "object",
+            "properties" : {
+              "name" : {
+                "type" : "array",
+                "description" : "name 필드 검증 오류 메시지 리스트",
+                "items" : {
+                  "oneOf" : [ {
+                    "type" : "object"
+                  }, {
+                    "type" : "boolean"
+                  }, {
+                    "type" : "string"
+                  }, {
+                    "type" : "number"
+                  } ]
+                }
+              },
+              "age" : {
+                "type" : "array",
+                "description" : "age 필드 검증 오류 메시지 리스트",
+                "items" : {
+                  "oneOf" : [ {
+                    "type" : "object"
+                  }, {
+                    "type" : "boolean"
+                  }, {
+                    "type" : "string"
+                  }, {
+                    "type" : "number"
+                  } ]
+                }
+              }
+            },
+            "description" : "오류 필드"
+          },
+          "responseTime" : {
+            "type" : "string",
+            "description" : "응답 시간"
+          },
+          "errorMessage" : {
+            "type" : "string",
+            "description" : "오류 메시지"
+          }
+        }
+      }
+    }
+  }
+}

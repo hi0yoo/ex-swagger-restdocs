@@ -33,19 +33,17 @@ repositories {
 // swagger 문서 설정 명시
 openapi3 {
     // server, title, description은 Swagger 문서가 꾸며지는데 사용되므로 직접 작성
-    server = "http://localhost:8080"
+    server = "http://localhost:8081"
     title = "restdocs-swagger Test API Documentation"
     description = "Spring REST Docs with SwaggerUI"
     version = "0.0.1-SNAPSHOT"
-//    format = "yaml"
     format = "json"
-    outputDirectory = "."
+    outputDirectory = "src/main/resources/static"
     outputFileNamePrefix = "swagger"
-    // tagDescriptionsPropertiesFile은 설정하지 않아도 무관
-//    tagDescriptionPropertiesFile = "src/test/resources/tag-descriptions.yaml"
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 

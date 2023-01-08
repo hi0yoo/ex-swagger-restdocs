@@ -1,7 +1,7 @@
 package com.example.exswaggerrestdocs.controller;
 
 
-import com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper;
+import com.epages.restdocs.apispec.*;
 import com.example.exswaggerrestdocs.controller.request.UserAddRequest;
 import com.example.exswaggerrestdocs.entity.Gender;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,9 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
+import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.payload.PayloadDocumentation;
-import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -38,13 +38,25 @@ public class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    FieldDescriptor[] successResponseFields = {PayloadDocumentation.fieldWithPath("responseTime").type(JsonFieldType.STRING).description("응답 시간"),
+            PayloadDocumentation.subsectionWithPath("errorMessage").type(JsonFieldType.STRING).description("오류 메시지").optional(),
+            PayloadDocumentation.subsectionWithPath("data").type(JsonFieldType.OBJECT).description("응답 데이터").optional()};
+
+    FieldDescriptor[] validFailResponseFields = {PayloadDocumentation.fieldWithPath("responseTime").type(JsonFieldType.STRING).description("응답 시간"),
+            PayloadDocumentation.subsectionWithPath("errorMessage").type(JsonFieldType.STRING).description("오류 메시지"),
+            PayloadDocumentation.subsectionWithPath("data").type(JsonFieldType.OBJECT).description("오류 필드")};
+
+    FieldDescriptor[] commonExceptionResponseFields = {PayloadDocumentation.fieldWithPath("responseTime").type(JsonFieldType.STRING).description("응답 시간"),
+            PayloadDocumentation.subsectionWithPath("errorMessage").type(JsonFieldType.STRING).description("오류 메시지"),
+            PayloadDocumentation.subsectionWithPath("data").type(JsonFieldType.OBJECT).description("오류 데이터").optional()};
+
     @Nested
     @DisplayName("유저 생성")
     class userAdd {
 
         @Test
         @DisplayName("유저 생성 성공")
-        public void createUser() throws Exception {
+        public void success() throws Exception {
             // given
             UserAddRequest userAddRequest = new UserAddRequest("user1", 25, Gender.MEN);
 
@@ -64,19 +76,59 @@ public class UserControllerTest {
             perform.andDo(
                     MockMvcRestDocumentationWrapper.document(
                             "{class-name}/{method-name}",
-                            MockMvcRestDocumentationWrapper.resourceDetails().description("유저 생성 성공"),
                             Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
                             Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                            PayloadDocumentation.requestFields(
-                                    Attributes.attributes(Attributes.key("title").value("요청 필드")),
-                                    PayloadDocumentation.fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-                                    PayloadDocumentation.fieldWithPath("age").type(JsonFieldType.NUMBER).description("나이"),
-                                    PayloadDocumentation.fieldWithPath("gender").type(JsonFieldType.STRING).description("성별")
-                            ),
-                            PayloadDocumentation.responseFields(
-                                    Attributes.attributes(Attributes.key("title").value("응답 필드")),
-                                    PayloadDocumentation.fieldWithPath("data.userId").type(JsonFieldType.NUMBER).description("생성된 유저 식별값"),
-                                    PayloadDocumentation.fieldWithPath("responseTime").ignored()
+                            ResourceDocumentation.resource(
+                                    ResourceSnippetParameters.builder()
+                                            .description("유저 생성")
+                                            .requestFields(
+                                                    PayloadDocumentation.fieldWithPath("name").description("이름"),
+                                                    PayloadDocumentation.fieldWithPath("age").description("나이"),
+                                                    PayloadDocumentation.fieldWithPath("gender").description("성별")
+                                            )
+                                            .responseFields(
+                                                    new FieldDescriptors(successResponseFields).and(
+                                                            PayloadDocumentation.fieldWithPath("data.userId").description("생성된 유저 식별값")
+                                                    )
+                                            )
+                                            .build()
+                            )
+                    )
+            );
+        }
+
+        @Test
+        @DisplayName("요청 데이터 검증 실패")
+        public void validFail() throws Exception {
+            // given
+            UserAddRequest userAddRequest = new UserAddRequest(null, 10, null);
+
+            // when
+            ResultActions perform = mockMvc.perform(
+                    RestDocumentationRequestBuilders.post("/api/v1/users")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .characterEncoding(StandardCharsets.UTF_8)
+                            .content(objectMapper.writeValueAsString(userAddRequest))
+            );
+
+            // then
+            perform.andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+            // docs
+            perform.andDo(
+                    MockMvcRestDocumentationWrapper.document(
+                            "{class-name}/{method-name}",
+                            Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                            Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                            ResourceDocumentation.resource(
+                                    ResourceSnippetParameters.builder()
+                                            .responseFields(
+                                                    new FieldDescriptors(validFailResponseFields).and(
+                                                            PayloadDocumentation.subsectionWithPath("data.name").description("name 필드 검증 오류 메시지 리스트").optional(),
+                                                            PayloadDocumentation.subsectionWithPath("data.age").description("age 필드 검증 오류 메시지 리스트").optional()
+                                                    )
+                                            )
+                                            .build()
                             )
                     )
             );
