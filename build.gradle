@@ -1,3 +1,4 @@
+// restdocs-api-spec: version 변수 설정
 buildscript {
     ext {
         restdocsApiSpecVersion = '0.16.2'
@@ -8,8 +9,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.7'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-//    id 'org.asciidoctor.convert' version '1.5.8'
+    // restdocs-api-spec: plugin 추가
     id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+//    id 'org.asciidoctor.convert' version '1.5.8'
 }
 
 group = 'com.example'
@@ -30,9 +32,8 @@ repositories {
 //    set('snippetsDir', file("build/generated-snippets"))
 //}
 
-// swagger 문서 설정 명시
+// restdocs-api-spec: OpenAPI 스펙 생성 설정 명시
 openapi3 {
-    // server, title, description은 Swagger 문서가 꾸며지는데 사용되므로 직접 작성
     server = "http://localhost:8081"
     title = "restdocs-swagger Test API Documentation"
     description = "Spring REST Docs with SwaggerUI"
@@ -52,7 +53,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    // restdocs-api-spec: restdocs-api-spec-mockmvc 의존성 추가
     testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
     // rest assured 사용한다면 다음과 같이 작성 가능
     // testImplementation "com.epages:restdocs-api-spec-restassured:${restdocsApiSpecVersion}"

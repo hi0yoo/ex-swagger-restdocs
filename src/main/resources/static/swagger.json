@@ -20,7 +20,7 @@
           "content" : {
             "application/json;charset=UTF-8" : {
               "schema" : {
-                "$ref" : "#/components/schemas/api-v1-users1167354824"
+                "$ref" : "#/components/schemas/api-v1-users1995822769"
               },
               "examples" : {
                 "user-add/success" : {
@@ -43,7 +43,7 @@
                 },
                 "examples" : {
                   "user-add/success" : {
-                    "value" : "{\n  \"responseTime\" : \"2023-01-08T15:47:29.602575\",\n  \"errorMessage\" : null,\n  \"data\" : {\n    \"userId\" : 1\n  }\n}"
+                    "value" : "{\n  \"responseTime\" : \"2023-01-09T11:11:54.832677\",\n  \"errorMessage\" : null,\n  \"data\" : {\n    \"userId\" : 1\n  }\n}"
                   }
                 }
               }
@@ -58,7 +58,7 @@
                 },
                 "examples" : {
                   "user-add/valid-fail" : {
-                    "value" : "{\n  \"responseTime\" : \"2023-01-08T15:47:30.794132\",\n  \"errorMessage\" : \"요청 데이터 검증 오류 발생\",\n  \"data\" : {\n    \"name\" : [ \"must not be blank\" ],\n    \"age\" : [ \"must be between 19 and 30\" ]\n  }\n}"
+                    "value" : "{\n  \"responseTime\" : \"2023-01-09T11:11:55.935495\",\n  \"errorMessage\" : \"요청 데이터 검증 오류 발생\",\n  \"data\" : {\n    \"name\" : [ \"must not be blank\" ],\n    \"age\" : [ \"must be between 19 and 30\" ]\n  }\n}"
                   }
                 }
               }
@@ -93,7 +93,8 @@
           }
         }
       },
-      "api-v1-users1167354824" : {
+      "api-v1-users1995822769" : {
+        "required" : [ "name" ],
         "type" : "object",
         "properties" : {
           "gender" : {
@@ -101,6 +102,7 @@
             "description" : "성별"
           },
           "name" : {
+            "minLength" : 1,
             "type" : "string",
             "description" : "이름"
           },

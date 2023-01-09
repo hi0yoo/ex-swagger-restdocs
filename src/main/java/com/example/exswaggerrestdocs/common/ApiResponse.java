@@ -4,9 +4,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ApiResponse<T> {
 
